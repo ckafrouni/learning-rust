@@ -1,11 +1,10 @@
 #![allow(dead_code)]
 mod todo;
 
-use my_lists::{Vector, LinkedList};
+use datastructures::{LinkedList, Vector};
 use todo::Todo;
 
 fn main() {
-
     let mut todos = Vector::new();
     todos.push(Todo::new("Buy milk"));
     todos.push(Todo::new("Buy eggs"));
@@ -27,6 +26,4 @@ fn main() {
     for todo in todos.iter() {
         println!("{}", todo);
     }
-
-
 }

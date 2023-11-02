@@ -101,7 +101,8 @@ where
             node = &mut node.as_mut().unwrap().next;
         }
 
-        node.as_mut().map(|node| std::mem::replace(&mut node.value, value))
+        node.as_mut()
+            .map(|node| std::mem::replace(&mut node.value, value))
     }
 }
 

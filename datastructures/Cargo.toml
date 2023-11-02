@@ -1,5 +1,5 @@
 [package]
-name = "my-lists"
+name = "datastructures"
 version = "0.1.0"
 edition = "2021"
 
