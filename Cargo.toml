@@ -3,6 +3,7 @@ resolver = "2"
 members = [
   "my-lists",
   "todo-app",
+  "trees",
 ]
 
 [workspace.dependencies]

@@ -123,3 +123,75 @@ where
         write!(f, "]")
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_new() {
+        let list: LinkedList<i32> = LinkedList::new();
+        assert_eq!(list.length(), 0);
+    }
+
+    #[test]
+    fn test_push() {
+        let mut list = LinkedList::new();
+        list.push(1);
+        list.push(2);
+        list.push(3);
+        assert_eq!(list.length(), 3);
+    }
+
+    #[test]
+    fn test_pop() {
+        let mut list = LinkedList::new();
+        list.push(1);
+        list.push(2);
+        list.push(3);
+        assert_eq!(list.pop(), Some(3));
+        assert_eq!(list.pop(), Some(2));
+        assert_eq!(list.pop(), Some(1));
+        assert_eq!(list.pop(), None);
+        assert_eq!(list.length(), 0);
+    }
+
+    #[test]
+    fn test_get() {
+        let mut list = LinkedList::new();
+        list.push(1);
+        list.push(2);
+        list.push(3);
+        assert_eq!(list.get(0), Some(&1));
+        assert_eq!(list.get(1), Some(&2));
+        assert_eq!(list.get(2), Some(&3));
+        assert_eq!(list.get(3), None);
+    }
+
+    #[test]
+    fn test_get_mut() {
+        let mut list = LinkedList::new();
+        list.push(1);
+        list.push(2);
+        list.push(3);
+        assert_eq!(list.get_mut(0), Some(&mut 1));
+        assert_eq!(list.get_mut(1), Some(&mut 2));
+        assert_eq!(list.get_mut(2), Some(&mut 3));
+        assert_eq!(list.get_mut(3), None);
+    }
+
+    #[test]
+    fn test_set() {
+        let mut list = LinkedList::new();
+        list.push(1);
+        list.push(2);
+        list.push(3);
+        assert_eq!(list.set(0, 4), Some(1));
+        assert_eq!(list.set(1, 5), Some(2));
+        assert_eq!(list.set(2, 6), Some(3));
+        assert_eq!(list.set(3, 7), None);
+        assert_eq!(list.get(0), Some(&4));
+        assert_eq!(list.get(1), Some(&5));
+        assert_eq!(list.get(2), Some(&6));
+    }
+}

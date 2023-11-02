@@ -104,7 +104,6 @@ impl<T> Vector<T> {
     }
 }
 
-
 impl<T> Debug for Vector<T>
 where
     T: Display,
@@ -121,5 +120,114 @@ where
         }
 
         write!(f, "]")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn new_vector_is_empty() {
+        let vector: Vector<i32> = Vector::new();
+        assert_eq!(vector.length(), 0);
+        assert_eq!(vector.capacity(), DEFAULT_CAPACITY);
+    }
+
+    #[test]
+    fn push_increases_length() {
+        let mut vector = Vector::new();
+        vector.push(1);
+        assert_eq!(vector.length(), 1);
+        vector.push(2);
+        assert_eq!(vector.length(), 2);
+    }
+
+    #[test]
+    fn push_increases_capacity() {
+        let mut vector = Vector::new();
+        for i in 0..DEFAULT_CAPACITY {
+            vector.push(i);
+        }
+        assert_eq!(vector.capacity(), DEFAULT_CAPACITY);
+        vector.push(1);
+        assert_eq!(vector.capacity(), DEFAULT_CAPACITY * 2);
+    }
+
+    #[test]
+    fn pop_decreases_length() {
+        let mut vector = Vector::new();
+        vector.push(1);
+        vector.push(2);
+        vector.pop();
+        assert_eq!(vector.length(), 1);
+        vector.pop();
+        assert_eq!(vector.length(), 0);
+    }
+
+    #[test]
+    fn pop_decreases_capacity() {
+        let mut vector = Vector::new();
+        for i in 0..DEFAULT_CAPACITY * 2 {
+            vector.push(i);
+        }
+        assert_eq!(vector.capacity(), DEFAULT_CAPACITY * 2);
+        for _ in 0..DEFAULT_CAPACITY * 3 / 2 {
+            vector.pop();
+        }
+        assert_eq!(vector.capacity(), DEFAULT_CAPACITY);
+    }
+
+    #[test]
+    fn get_returns_value_at_index() {
+        let mut vector = Vector::new();
+        vector.push(1);
+        vector.push(2);
+        assert_eq!(vector.get(0), Some(&1));
+        assert_eq!(vector.get(1), Some(&2));
+    }
+
+    #[test]
+    fn get_returns_none_if_index_out_of_bounds() {
+        let mut vector = Vector::new();
+        vector.push(1);
+        vector.push(2);
+        assert_eq!(vector.get(2), None);
+    }
+
+    #[test]
+    fn get_mut_returns_value_at_index() {
+        let mut vector = Vector::new();
+        vector.push(1);
+        vector.push(2);
+        assert_eq!(vector.get_mut(0), Some(&mut 1));
+        assert_eq!(vector.get_mut(1), Some(&mut 2));
+    }
+
+    #[test]
+    fn get_mut_returns_none_if_index_out_of_bounds() {
+        let mut vector = Vector::new();
+        vector.push(1);
+        vector.push(2);
+        assert_eq!(vector.get_mut(2), None);
+    }
+
+    #[test]
+    fn set_replaces_value_at_index() {
+        let mut vector = Vector::new();
+        vector.push(1);
+        vector.push(2);
+        assert_eq!(vector.set(0, 3), Some(1));
+        assert_eq!(vector.set(1, 4), Some(2));
+        assert_eq!(vector.get(0), Some(&3));
+        assert_eq!(vector.get(1), Some(&4));
+    }
+
+    #[test]
+    fn set_returns_none_if_index_out_of_bounds() {
+        let mut vector = Vector::new();
+        vector.push(1);
+        vector.push(2);
+        assert_eq!(vector.set(2, 3), None);
     }
 }
