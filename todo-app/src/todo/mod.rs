@@ -5,9 +5,9 @@ pub struct Todo {
 }
 
 impl Todo {
-    pub fn new(text: String) -> Self {
+    pub fn new(text: &str) -> Self {
         Self {
-            text,
+            text: text.to_string(),
             completed: false,
         }
     }
