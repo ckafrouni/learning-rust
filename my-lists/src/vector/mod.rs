@@ -1,5 +1,8 @@
 use std::fmt::{Debug, Display, Formatter, Result};
 
+mod iterator;
+pub use iterator::VectorIter;
+
 pub struct Vector<T> {
     data: Box<[Option<T>]>,
     length: usize,
@@ -101,32 +104,6 @@ impl<T> Vector<T> {
     }
 }
 
-pub struct VectorIter<'a, T> {
-    vector: &'a Vector<T>,
-    index: usize,
-}
-
-impl<T> Vector<T> {
-    pub fn iter(&self) -> VectorIter<'_, T> {
-        VectorIter {
-            vector: self,
-            index: 0,
-        }
-    }
-}
-
-impl<'a, T> Iterator for VectorIter<'a, T> {
-    type Item = &'a T;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.index >= self.vector.length {
-            return None;
-        }
-        let value = self.vector.get(self.index);
-        self.index += 1;
-        value
-    }
-}
 
 impl<T> Debug for Vector<T>
 where
