@@ -1,0 +1,9 @@
+# Compiled files
+/target/
+**/*.rs.bk
+
+# Environment variables set by cargo
+.env
+
+# Ignore .lock files
+**/Cargo.lock
