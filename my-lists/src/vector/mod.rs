@@ -41,6 +41,39 @@ impl<T> Vector<T> {
         value
     }
 
+    pub fn get(&self, index: usize) -> Option<&T> {
+        if index >= self.length {
+            return None;
+        }
+        self.data[index].as_ref()
+    }
+
+    pub fn get_mut(&mut self, index: usize) -> Option<&mut T> {
+        if index >= self.length {
+            return None;
+        }
+        self.data[index].as_mut()
+    }
+
+    pub fn set(&mut self, index: usize, value: T) -> Option<T> {
+        if index >= self.length {
+            return None;
+        }
+        self.data[index].replace(value)
+    }
+
+    pub fn insert(&mut self, index: usize, value: T) {
+        if index > self.length {
+            panic!("Index out of bounds");
+        }
+        self.resize();
+        for i in (index..self.length).rev() {
+            self.data[i + 1] = self.data[i].take();
+        }
+        self.data[index] = Some(value);
+        self.length += 1;
+    }
+
     fn resize(&mut self) {
         if self.length == self.capacity {
             // resize up
@@ -65,6 +98,33 @@ impl<T> Vector<T> {
             .take(capacity)
             .collect::<Vec<_>>()
             .into_boxed_slice()
+    }
+}
+
+pub struct VectorIter<'a, T> {
+    vector: &'a Vector<T>,
+    index: usize,
+}
+
+impl<T> Vector<T> {
+    pub fn iter(&self) -> VectorIter<'_, T> {
+        VectorIter {
+            vector: self,
+            index: 0,
+        }
+    }
+}
+
+impl<'a, T> Iterator for VectorIter<'a, T> {
+    type Item = &'a T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.index >= self.vector.length {
+            return None;
+        }
+        let value = self.vector.get(self.index);
+        self.index += 1;
+        value
     }
 }
 
