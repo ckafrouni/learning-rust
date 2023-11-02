@@ -20,7 +20,6 @@ This in the most part is a wishlist of things I want to do with Rust.
 I will be adding to this list as I go along while hopefully crossing things off as I go. 🫡
 
 - `datastructures`:
-
     - `stack`: A stack LIFO implementation.
     - `queue`: A queue FIFO implementation.
     - `hash-table`: A basic hash table implementation.
@@ -32,14 +31,9 @@ I will be adding to this list as I go along while hopefully crossing things off 
 - `advent-of-code`: Solutions to Advent of Code problems.
 
 - `virtual-machine-ecosystem`: A virtual machine ecosystem based on a very simple ISA.
-
     - **NOTE** This is a long term project. The project will be called `YawningEcosystem` 🥱  
-
     - `ysm`: An assembler.
         - `parser`: A parser for the assembler using the `nom` crate.
-
     - `yvm`: The virtual machine.
-
     - `yawn`: A high level language that compiles to the virtual machine's assembly.
-
         - `yawnc`: A compiler for the high level language.
