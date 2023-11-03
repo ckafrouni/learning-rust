@@ -10,6 +10,7 @@ pub struct Repl {
     history_index: usize,
 }
 
+#[allow(dead_code)]
 impl Repl {
     pub fn new(prompt: &'static str) -> Self {
         Self {
@@ -54,7 +55,6 @@ impl Repl {
     }
 
     pub fn run(&mut self) {
-
         loop {
             self.display_prompt();
 

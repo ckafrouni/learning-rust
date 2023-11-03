@@ -3,7 +3,7 @@ use crate::tokenizer::ReservedKeyword;
 #[derive(Debug, Clone, PartialEq)]
 pub enum AstNode {
     // TODO: Separate out the different types of nodes
-    // Example: 
+    // Example:
     //      - AstNode::FnCall { name: String, args: Vec<AstNode> }
     //      - AstNode::If { cond: AstNode, then: AstNode, else: AstNode }
     //      - AstNode::Let { name: String, value: AstNode }
@@ -68,7 +68,6 @@ impl AstNode {
     //     }
     // }
 }
-
 
 /// Implement Display for AstNode
 /// Example:

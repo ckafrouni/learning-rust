@@ -3,10 +3,10 @@
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token {
     // Delimiters
-    Space, // ' '
+    Space,   // ' '
     NewLine, // '\n'
-    LParen, // '('
-    RParen, // ')'
+    LParen,  // '('
+    RParen,  // ')'
     EOF,
     // Binary Operators
     Add, // '+'
@@ -17,9 +17,9 @@ pub enum Token {
     Neg, // '~'
     Not, // '!'
     // Literals
-    Number(i32), // [0-9]+
+    Number(i32),    // [0-9]+
     String(String), // '"' [a-zA-Z0-9]* '"'
-    Nil, // '()'
+    Nil,            // '()'
     // Identifiers
     Ident(String), // [a-zA-Z]+
 
@@ -28,15 +28,15 @@ pub enum Token {
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum ReservedKeyword {
-    IF, // 'if'
-    ELSE, // 'else'
+    IF,     // 'if'
+    ELSE,   // 'else'
     ELSEIF, // 'elseif'
-    DEF, // 'def'
-    LET, // 'let'
-    TRUE, // 'true'
-    FALSE, // 'false'
-    AND, // 'and'
-    OR, // 'or',
+    DEF,    // 'def'
+    LET,    // 'let'
+    TRUE,   // 'true'
+    FALSE,  // 'false'
+    AND,    // 'and'
+    OR,     // 'or',
 }
 
 pub struct Tokenizer {
@@ -56,8 +56,6 @@ impl Tokenizer {
     }
 
     pub fn next_token(&mut self) -> Token {
-
-        
         if self.pos >= self.input.len() {
             return Token::EOF;
         }
@@ -75,7 +73,7 @@ impl Tokenizer {
                     }
                 }
                 Token::LParen
-            },
+            }
             ')' => Token::RParen,
             '+' => Token::Add,
             '-' => Token::Sub,
@@ -124,8 +122,8 @@ impl Tokenizer {
             match token {
                 Token::EOF => {
                     tokens.push(token);
-                    break
-                },
+                    break;
+                }
                 Token::Space | Token::NewLine => continue,
                 _ => tokens.push(token),
             }
@@ -184,7 +182,6 @@ impl std::fmt::Display for Token {
         };
         write!(f, "{}", s)
     }
-    
 }
 
 /// Implement Display for ReservedKeyword
@@ -205,7 +202,6 @@ impl std::fmt::Display for ReservedKeyword {
         };
         write!(f, "{}", s)
     }
-    
 }
 
 #[cfg(test)]
