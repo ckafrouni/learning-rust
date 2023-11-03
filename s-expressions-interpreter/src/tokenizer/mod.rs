@@ -185,11 +185,10 @@ mod tests {
             vec![
                 Token::LParen,
                 Token::Add,
-                Token::Space,
                 Token::Number(1),
-                Token::Space,
                 Token::Number(2),
                 Token::RParen,
+                Token::EOF,
             ]
         );
     }
