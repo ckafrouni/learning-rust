@@ -1,4 +1,4 @@
-//! Ast Parser
+//! Parser module for lisp interpreter.
 //!
 //! Parser is a module to parse tokens into AST.
 //!
@@ -189,7 +189,11 @@ impl Parser {
 
     fn parse_func_call(&mut self) -> AstNode {
         let mut node = match self.next_token() {
-            Token::Ident(s) => AstNode::new_node(AstKind::FnCall),
+            Token::Ident(s) => {
+                let mut tmp = AstNode::new_node(AstKind::FnCall);
+                tmp.add_child(AstNode::new_leaf(AstKind::Ident(s)));
+                tmp
+            },
             op => panic!("unexpected token {:?}", op),
         };
 
@@ -219,5 +223,135 @@ impl Parser {
         }
 
         node
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::tokenizer::ReservedKeyword;
+
+    #[test]
+    fn test_parse_number() {
+        let tokens = vec![Token::Number(1), Token::EOF];
+        let mut parser = Parser::new(tokens);
+        let ast = parser.parse_expr();
+        assert_eq!(ast, AstNode::new_leaf(AstKind::Number(1)));
+    }
+
+    #[test]
+    fn test_parse_string() {
+        let tokens = vec![Token::String("hello".to_string()), Token::EOF];
+        let mut parser = Parser::new(tokens);
+        let ast = parser.parse_expr();
+        assert_eq!(ast, AstNode::new_leaf(AstKind::String("hello".to_string())));
+    }
+
+    #[test]
+    fn test_parse_nil() {
+        let tokens = vec![Token::Nil, Token::EOF];
+        let mut parser = Parser::new(tokens);
+        let ast = parser.parse_expr();
+        assert_eq!(ast, AstNode::new_leaf(AstKind::Nil));
+    }
+
+    #[test]
+    fn test_parse_ident() {
+        let tokens = vec![Token::Ident("hello".to_string()), Token::EOF];
+        let mut parser = Parser::new(tokens);
+        let ast = parser.parse_expr();
+        assert_eq!(ast, AstNode::new_leaf(AstKind::Ident("hello".to_string())));
+    }
+
+    #[test]
+    fn test_parse_binary_op() {
+        let tokens = vec![
+            Token::LParen,
+            Token::Add,
+            Token::Number(1),
+            Token::Number(2),
+            Token::RParen,
+            Token::EOF,
+        ];
+        let mut parser = Parser::new(tokens);
+        let ast = parser.parse_expr();
+        let mut node = AstNode::new_node(AstKind::Add);
+        node.add_child(AstNode::new_leaf(AstKind::Number(1)));
+        node.add_child(AstNode::new_leaf(AstKind::Number(2)));
+        assert_eq!(ast, node);
+    }
+
+    #[test]
+    fn test_parse_unary_op() {
+        let tokens = vec![
+            Token::LParen,
+            Token::Neg,
+            Token::Number(1),
+            Token::RParen,
+            Token::EOF,
+        ];
+        let mut parser = Parser::new(tokens);
+        let ast = parser.parse_expr();
+        let mut node = AstNode::new_node(AstKind::Neg);
+        node.add_child(AstNode::new_leaf(AstKind::Number(1)));
+        assert_eq!(ast, node);
+    }
+
+    #[test]
+    fn test_parse_func_call() {
+        let tokens = vec![
+            Token::LParen,
+            Token::Ident("hello".to_string()),
+            Token::Number(1),
+            Token::RParen,
+            Token::EOF,
+        ];
+        let mut parser = Parser::new(tokens);
+        let ast = parser.parse_expr();
+        let mut node = AstNode::new_node(AstKind::FnCall);
+        node.add_child(AstNode::new_leaf(AstKind::Ident("hello".to_string())));
+        node.add_child(AstNode::new_leaf(AstKind::Number(1)));
+        assert_eq!(ast, node);
+    }
+
+    #[test]
+    fn test_parse_reserved_expr() {
+        let tokens = vec![
+            Token::LParen,
+            Token::Reserved(ReservedKeyword::IF),
+            Token::Number(1),
+            Token::RParen,
+            Token::EOF,
+        ];
+        let mut parser = Parser::new(tokens);
+        let ast = parser.parse_expr();
+        let mut node = AstNode::new_node(AstKind::Reserved(ReservedKeyword::IF));
+        node.add_child(AstNode::new_leaf(AstKind::Number(1)));
+        assert_eq!(ast, node);
+    }
+
+    #[test]
+    fn test_parse_prog() {
+        let tokens = vec![
+            Token::LParen,
+            Token::Reserved(ReservedKeyword::IF),
+            Token::Number(1),
+            Token::RParen,
+            Token::LParen,
+            Token::Reserved(ReservedKeyword::DEF),
+            Token::Number(2),
+            Token::RParen,
+            Token::EOF,
+        ];
+        let mut parser = Parser::new(tokens);
+        let ast = parser.parse_prog();
+        let mut node = AstNode::new_node(AstKind::Prog);
+        let mut if_node = AstNode::new_node(AstKind::Reserved(ReservedKeyword::IF));
+        if_node.add_child(AstNode::new_leaf(AstKind::Number(1)));
+        let mut def_node = AstNode::new_node(AstKind::Reserved(ReservedKeyword::DEF));
+        def_node.add_child(AstNode::new_leaf(AstKind::Number(2)));
+        node.add_child(if_node);
+        node.add_child(def_node);
+        assert_eq!(ast, node);
     }
 }

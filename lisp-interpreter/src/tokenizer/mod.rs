@@ -1,3 +1,5 @@
+//! Tokenizer for the Lisp interpreter.
+
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token {
     // Delimiters

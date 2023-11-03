@@ -2,6 +2,17 @@ use crate::tokenizer::ReservedKeyword;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum AstNode {
+    // TODO: Separate out the different types of nodes
+    // Example: 
+    //      - AstNode::FnCall { name: String, args: Vec<AstNode> }
+    //      - AstNode::If { cond: AstNode, then: AstNode, else: AstNode }
+    //      - AstNode::Let { name: String, value: AstNode }
+    //      - AstNode::Def { name: String, value: AstNode }
+    //      - AstNode::Ident { name: String }
+    //      - AstNode::Literal { value: Literal } (Literal::Number, Literal::String, Literal::Nil, Literal::Bool, etc.)
+    //      - AstNode::Binary { op: BinaryOp, lhs: AstNode, rhs: AstNode }
+    //      - AstNode::Unary { op: UnaryOp, expr: AstNode }
+    //      - AstNode::Prog { exprs: Vec<AstNode> }
     Node {
         kind: AstKind,
         children: Vec<AstNode>,
