@@ -2,6 +2,7 @@
 pub enum Token {
     // Delimiters
     Space, // ' '
+    NewLine, // '\n'
     LParen, // '('
     RParen, // ')'
     EOF,
@@ -19,6 +20,9 @@ pub enum Token {
     Nil, // '()'
     // Identifiers
     Ident(String), // [a-zA-Z]+
+
+    // Reserved Keywords
+    ProgStart, // 'PROG'
 }
 
 pub struct Tokenizer {
@@ -64,6 +68,7 @@ impl Tokenizer {
             '~' => Token::Neg,
             '!' => Token::Not,
             ' ' => Token::Space,
+            '\n' => Token::NewLine,
             _ => {
                 if c.is_digit(10) {
                     let mut num = c.to_string();
@@ -88,16 +93,7 @@ impl Tokenizer {
                     }
                     Token::String(s)
                 } else if c.is_alphabetic() {
-                    let mut s = c.to_string();
-                    while self.pos < self.input.len() {
-                        let c = self.input.chars().nth(self.pos).unwrap();
-                        if !c.is_alphabetic() {
-                            break;
-                        }
-                        s.push(c);
-                        self.pos += 1;
-                    }
-                    Token::Ident(s)
+                    self.tokenize_ident_or_reserved()
                 } else {
                     panic!("unexpected character: {}", c);
                 }
@@ -114,11 +110,27 @@ impl Tokenizer {
                     tokens.push(token);
                     break
                 },
-                Token::Space => continue,
+                Token::Space | Token::NewLine => continue,
                 _ => tokens.push(token),
             }
         }
         tokens
+    }
+
+    fn tokenize_ident_or_reserved(&mut self) -> Token {
+        let mut ident = String::new();
+        while self.pos < self.input.len() {
+            let c = self.input.chars().nth(self.pos).unwrap();
+            if !c.is_alphabetic() {
+                break;
+            }
+            ident.push(c);
+            self.pos += 1;
+        }
+        match ident.as_str() {
+            "PROG" => Token::ProgStart,
+            _ => Token::Ident(ident),
+        }
     }
 }
 

@@ -5,31 +5,21 @@
 //! We follow the Lisplike grammar:
 //!
 //! ```
+//! program ::=
+//!    PROG_START *expr EOF
+//! 
 //! expr ::=
 //!     NUMBER
 //!     | STRING
 //!     | NIL
 //!     | IDENT
 //!     | '(' paren_expr ')'
-//!
+//! 
 //! paren_expr ::=
-//!     expr
+//!     expr*
 //!     | binary_op expr expr
 //!     | unary_op expr
-//!
-// //! primary_expr ::=
-// //!     | "(" expr ")"
-// //!     | list_expr
-// //!     | func_def
-// //!     | anonymous_func_def
-// //!
-// //!
-// //! func_def ::= "(" "def" IDENT "(" IDENT* ")" expr ")"
-// //!
-// //! anonymous_func_def ::= "(" "lambda" "(" IDENT* ")" expr ")"
-// //!
-// //! list_expr ::= "(" expr* ")"
-// //!
+//!     | func_call IDENT expr
 //!
 //! binary_op ::= ADD | SUB | MUL | DIV
 //! 
@@ -76,11 +66,18 @@ impl Parser {
         token
     }
 
-    pub fn parse(&mut self) -> AstNode {
-        self.parse_expr()
+    pub fn parse_prog(&mut self) -> AstNode {
+        let mut node = AstNode::new_node(AstKind::Prog);
+
+        while self.peek() != Token::EOF {
+            let expr = self.parse_expr();
+            node.add_child(expr);
+        }
+
+        node
     }
 
-    fn parse_expr(&mut self) -> AstNode {
+    pub fn parse_expr(&mut self) -> AstNode {
         let token = self.peek();
 
         match token {
@@ -104,8 +101,9 @@ impl Parser {
                     Token::Add | Token::Sub | Token::Mul | Token::Div => {
                         self.parse_binary_op()
                     },
-                    Token::Ident(_) => self.parse_unary_op(),
-                    _ => self.parse_paren_expr(),
+                    Token::Neg | Token::Not => self.parse_unary_op(),
+                    // Token::Ident(_) => self.parse_unary_op(),
+                    _ => self.parse_expr(),
                 }
             }
             _ => panic!("unexpected token {:?}", next),

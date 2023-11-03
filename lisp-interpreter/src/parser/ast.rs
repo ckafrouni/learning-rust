@@ -21,8 +21,10 @@ pub enum AstKind {
     Nil,
     Neg,
     Not,
-    Call,
-    Def,
+    // Call,
+    // Def,
+
+    Prog,
 }
 
 impl AstNode {
@@ -45,10 +47,10 @@ impl AstNode {
         }
     }
 
-    pub fn kind(&self) -> &AstKind {
-        match self {
-            AstNode::Node { kind, .. } => kind,
-            AstNode::Leaf { kind } => kind,
-        }
-    }
+    // pub fn kind(&self) -> &AstKind {
+    //     match self {
+    //         AstNode::Node { kind, .. } => kind,
+    //         AstNode::Leaf { kind } => kind,
+    //     }
+    // }
 }
