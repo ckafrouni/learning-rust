@@ -20,7 +20,6 @@ fn parsing_an_expression() {
 
 fn parsing_a_program() {
     let prog = "
-    PROG
     (+ 1 2)
     (+ 2 1)
     ";
@@ -40,4 +39,3 @@ fn main() {
     parsing_a_program();
     println!("");
 }
- //

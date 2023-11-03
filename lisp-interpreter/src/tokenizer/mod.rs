@@ -21,8 +21,20 @@ pub enum Token {
     // Identifiers
     Ident(String), // [a-zA-Z]+
 
-    // Reserved Keywords
-    ProgStart, // 'PROG'
+    Reserved(ReservedKeyword),
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub enum ReservedKeyword {
+    IF, // 'if'
+    ELSE, // 'else'
+    ELSEIF, // 'elseif'
+    DEF, // 'def'
+    LET, // 'let'
+    TRUE, // 'true'
+    FALSE, // 'false'
+    AND, // 'and'
+    OR, // 'or',
 }
 
 pub struct Tokenizer {
@@ -42,6 +54,8 @@ impl Tokenizer {
     }
 
     pub fn next_token(&mut self) -> Token {
+
+        
         if self.pos >= self.input.len() {
             return Token::EOF;
         }
@@ -128,7 +142,16 @@ impl Tokenizer {
             self.pos += 1;
         }
         match ident.as_str() {
-            "PROG" => Token::ProgStart,
+            "if" => Token::Reserved(ReservedKeyword::IF),
+            "else" => Token::Reserved(ReservedKeyword::ELSE),
+            "elseif" => Token::Reserved(ReservedKeyword::ELSEIF),
+            "def" => Token::Reserved(ReservedKeyword::DEF),
+            "let" => Token::Reserved(ReservedKeyword::LET),
+            "true" => Token::Reserved(ReservedKeyword::TRUE),
+            "false" => Token::Reserved(ReservedKeyword::FALSE),
+            "and" => Token::Reserved(ReservedKeyword::AND),
+            "or" => Token::Reserved(ReservedKeyword::OR),
+
             _ => Token::Ident(ident),
         }
     }

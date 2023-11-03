@@ -6,7 +6,7 @@
 //!
 //! ```
 //! program ::=
-//!    PROG_START *expr EOF
+//!     *expr EOF
 //! 
 //! expr ::=
 //!     NUMBER
@@ -19,16 +19,16 @@
 //!     expr*
 //!     | binary_op expr expr
 //!     | unary_op expr
-//!     | func_call IDENT expr
+//!     | func_call
+//!     | RESERVED expr
 //!
 //! binary_op ::= ADD | SUB | MUL | DIV
 //! 
 //! unary_op ::= 
 //!     NEG
 //!     | NOT
-//!     | func_call
 //! 
-//! func_call ::= "(" IDENT expr ")"
+//! func_call ::= IDENT expr
 //!
 //! NUMBER ::= Token::Number
 //! STRING ::= Token::String
@@ -38,6 +38,8 @@
 //! SUB ::= Token::Sub
 //! MUL ::= Token::Mul
 //! DIV ::= Token::Div
+//! 
+//! RESERVED ::= Token::Reserved
 //! ```
 
 mod ast;
@@ -102,7 +104,8 @@ impl Parser {
                         self.parse_binary_op()
                     },
                     Token::Neg | Token::Not => self.parse_unary_op(),
-                    // Token::Ident(_) => self.parse_unary_op(),
+                    Token::Ident(_) => self.parse_func_call(),
+                    Token::Reserved(_) => self.parse_reserved_expr(),
                     _ => self.parse_expr(),
                 }
             }
@@ -170,6 +173,40 @@ impl Parser {
             Token::Ident(s) => AstNode::new_node(AstKind::Ident(s)),
             Token::Neg => AstNode::new_node(AstKind::Neg),
             Token::Not => AstNode::new_node(AstKind::Not),
+            op => panic!("unexpected token {:?}", op),
+        };
+
+        let expr = self.parse_expr();
+        node.add_child(expr);
+
+        let next = self.next_token();
+        if next != Token::RParen {
+            panic!("unexpected token {:?}", next);
+        }
+
+        node
+    }
+
+    fn parse_func_call(&mut self) -> AstNode {
+        let mut node = match self.next_token() {
+            Token::Ident(s) => AstNode::new_node(AstKind::FnCall),
+            op => panic!("unexpected token {:?}", op),
+        };
+
+        let expr = self.parse_expr();
+        node.add_child(expr);
+
+        let next = self.next_token();
+        if next != Token::RParen {
+            panic!("unexpected token {:?}", next);
+        }
+
+        node
+    }
+
+    fn parse_reserved_expr(&mut self) -> AstNode {
+        let mut node = match self.next_token() {
+            Token::Reserved(s) => AstNode::new_node(AstKind::Reserved(s)),
             op => panic!("unexpected token {:?}", op),
         };
 

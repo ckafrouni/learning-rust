@@ -1,3 +1,5 @@
+use crate::tokenizer::ReservedKeyword;
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum AstNode {
     Node {
@@ -21,8 +23,9 @@ pub enum AstKind {
     Nil,
     Neg,
     Not,
-    // Call,
-    // Def,
+    FnCall,
+
+    Reserved(ReservedKeyword),
 
     Prog,
 }
