@@ -1,9 +1,9 @@
 //! # S-Expressions Interpreter
-//! 
+//!
 //! This is a simple interpreter REPL for a custom S-Expressions.
-//! 
+//!
 //! ## Usage
-//! 
+//!
 //! ```bash
 //! $ cargo install s-expressions-interpreter
 //! $ s-expressions-interpreter
@@ -25,50 +25,18 @@
 //! 3628800
 //! >> exit
 //! ```
-//! 
+//!
 //! ## Grammar
-//! 
+//!
 //! The grammar is defined in the parser module.
 
-pub mod tokenizer;
 pub mod parser;
+pub mod repl;
+pub mod tokenizer;
 
-use tokenizer::Tokenizer;
-use parser::Parser;
-
-const VERSION: &str = "0.0.1";
-const AUTHOR: &str = "Christophe Kafrouni";
-
-const PROMPT: &str = ">> ";
-
-const WELCOME_MESSAGE: &str = "\
-Welcome to the S-Expressions Interpreter!
-
-This is a simple interpreter REPL for a custom S-Expressions.";
-
-fn repl() {
-    use std::io::Write;
-    
-    loop {
-        print!("{}", PROMPT);
-        std::io::stdout().flush().unwrap();
-
-        let mut input = String::new();
-        std::io::stdin().read_line(&mut input).unwrap();
-        if input.trim() == "exit" {
-            break;
-        }
-        let tokens = Tokenizer::new(input).tokenize();
-        let mut parser = Parser::new(tokens);
-        let expr = parser.parse_expr();
-        println!("{:?}", expr);
-    }
-}
+use repl::Repl;
 
 fn main() {
-
-    println!("{}\n\nVERSION: {}\nAUTHOR: {}\n", WELCOME_MESSAGE, VERSION, AUTHOR);
-
-    repl();
-
+    let mut repl = Repl::new(">> ");
+    repl.run();
 }

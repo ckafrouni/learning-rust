@@ -159,6 +159,55 @@ impl Tokenizer {
     }
 }
 
+/// Implement Display for Token
+/// Example:
+///    - Token::LParen
+impl std::fmt::Display for Token {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let s = match self {
+            Token::Space => "Space",
+            Token::NewLine => "NewLine",
+            Token::LParen => "LParen",
+            Token::RParen => "RParen",
+            Token::EOF => "EOF",
+            Token::Add => "Add",
+            Token::Sub => "Sub",
+            Token::Mul => "Mul",
+            Token::Div => "Div",
+            Token::Neg => "Neg",
+            Token::Not => "Not",
+            Token::Number(n) => return write!(f, "{}", n),
+            Token::String(s) => return write!(f, "{}", s),
+            Token::Nil => "Nil",
+            Token::Ident(s) => return write!(f, "{}", s),
+            Token::Reserved(k) => return write!(f, "{}", k),
+        };
+        write!(f, "{}", s)
+    }
+    
+}
+
+/// Implement Display for ReservedKeyword
+/// Example:
+///   - ReservedKeyword::IF
+impl std::fmt::Display for ReservedKeyword {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let s = match self {
+            ReservedKeyword::IF => "if",
+            ReservedKeyword::ELSE => "else",
+            ReservedKeyword::ELSEIF => "elseif",
+            ReservedKeyword::DEF => "def",
+            ReservedKeyword::LET => "let",
+            ReservedKeyword::TRUE => "true",
+            ReservedKeyword::FALSE => "false",
+            ReservedKeyword::AND => "and",
+            ReservedKeyword::OR => "or",
+        };
+        write!(f, "{}", s)
+    }
+    
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -68,3 +68,45 @@ impl AstNode {
     //     }
     // }
 }
+
+
+/// Implement Display for AstNode
+/// Example:
+///      - AstNode::FnCall { name: String, args: Vec<AstNode> }
+impl std::fmt::Display for AstNode {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            AstNode::Node { kind, children } => {
+                write!(f, "({}", kind)?;
+                for child in children {
+                    write!(f, " {}", child)?;
+                }
+                write!(f, ")")
+            }
+            AstNode::Leaf { kind } => write!(f, "{}", kind),
+        }
+    }
+}
+
+/// Implement Display for AstKind
+/// Example:
+///     - AstNode::FnCall { name: String, args: Vec<AstNode> }
+impl std::fmt::Display for AstKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            AstKind::Number(n) => write!(f, "{}", n),
+            AstKind::String(s) => write!(f, "\"{}\"", s),
+            AstKind::Ident(s) => write!(f, "{}", s),
+            AstKind::Add => write!(f, "+"),
+            AstKind::Sub => write!(f, "-"),
+            AstKind::Mul => write!(f, "*"),
+            AstKind::Div => write!(f, "/"),
+            AstKind::Nil => write!(f, "nil"),
+            AstKind::Neg => write!(f, "-"),
+            AstKind::Not => write!(f, "!"),
+            AstKind::FnCall => write!(f, "fn-call"),
+            AstKind::Reserved(kw) => write!(f, "{}", kw),
+            AstKind::Prog => write!(f, "prog"),
+        }
+    }
+}
