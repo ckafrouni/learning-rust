@@ -3,6 +3,7 @@ resolver = "2"
 members = [
   "datastructures",
   "todo-app",
+  "lisp-interpreter",
 ]
 
 [workspace.dependencies]
