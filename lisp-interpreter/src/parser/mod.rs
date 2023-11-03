@@ -52,7 +52,7 @@
 
 mod ast;
 
-use ast::{AstLeaf, AstNode, AstKind};
+use ast::{AstNode, AstKind};
 use crate::tokenizer::Token;
 
 #[derive(Debug, PartialEq)]
@@ -112,10 +112,10 @@ impl Parser {
         }
     }
 
-    fn parse_number(&mut self) -> AstLeaf {
+    fn parse_number(&mut self) -> AstNode {
         let next = self.next_token();
         match next {
-            Token::Number(n) => AstLeaf::new(AstKind::Number(n)),
+            Token::Number(n) => AstNode::new_leaf(AstKind::Number(n)),
             _ => panic!("unexpected token {:?}", next),
         }
     }
@@ -123,7 +123,7 @@ impl Parser {
     fn parse_string(&mut self) -> AstNode {
         let next = self.next_token();
         match next {
-            Token::String(s) => AstNode::new(AstKind::String(s)),
+            Token::String(s) => AstNode::new_leaf(AstKind::String(s)),
             _ => panic!("unexpected token {:?}", next),
         }
     }
@@ -131,7 +131,7 @@ impl Parser {
     fn parse_nil(&mut self) -> AstNode {
         let next = self.next_token();
         match next {
-            Token::Nil => AstNode::new(AstKind::Nil),
+            Token::Nil => AstNode::new_leaf(AstKind::Nil),
             _ => panic!("unexpected token {:?}", next),
         }
     }
@@ -139,17 +139,17 @@ impl Parser {
     fn parse_ident(&mut self) -> AstNode {
         let next = self.next_token();
         match next {
-            Token::Ident(s) => AstNode::new(AstKind::Ident(s)),
+            Token::Ident(s) => AstNode::new_leaf(AstKind::Ident(s)),
             _ => panic!("unexpected token {:?}", next),
         }
     }
 
     fn parse_binary_op(&mut self) -> AstNode {
         let mut node = match self.next_token() {
-            Token::Add => AstNode::new(AstKind::Add),
-            Token::Sub => AstNode::new(AstKind::Sub),
-            Token::Mul => AstNode::new(AstKind::Mul),
-            Token::Div => AstNode::new(AstKind::Div),
+            Token::Add => AstNode::new_node(AstKind::Add),
+            Token::Sub => AstNode::new_node(AstKind::Sub),
+            Token::Mul => AstNode::new_node(AstKind::Mul),
+            Token::Div => AstNode::new_node(AstKind::Div),
             op => panic!("unexpected token {:?}", op),
         };
 
@@ -169,9 +169,9 @@ impl Parser {
 
     fn parse_unary_op(&mut self) -> AstNode {
         let mut node = match self.next_token() {
-            Token::Ident(s) => AstNode::new(AstKind::Ident(s)),
-            Token::Neg => AstNode::new(AstKind::Neg),
-            Token::Not => AstNode::new(AstKind::Not),
+            Token::Ident(s) => AstNode::new_node(AstKind::Ident(s)),
+            Token::Neg => AstNode::new_node(AstKind::Neg),
+            Token::Not => AstNode::new_node(AstKind::Not),
             op => panic!("unexpected token {:?}", op),
         };
 

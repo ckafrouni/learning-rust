@@ -1,15 +1,13 @@
-
 #[derive(Debug, Clone, PartialEq)]
-pub struct AstNode {
-    pub kind: AstKind,
-    pub children: Vec<AstNode>,
+pub enum AstNode {
+    Node {
+        kind: AstKind,
+        children: Vec<AstNode>,
+    },
+    Leaf {
+        kind: AstKind,
+    },
 }
-
-#[derive(Debug, Clone, PartialEq)]
-pub struct AstLeaf {
-    pub kind: AstKind,
-}
-
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum AstKind {
@@ -28,20 +26,29 @@ pub enum AstKind {
 }
 
 impl AstNode {
-    pub fn new(kind: AstKind) -> Self {
-        Self {
+    pub fn new_node(kind: AstKind) -> Self {
+        AstNode::Node {
             kind,
             children: Vec::new(),
         }
     }
 
-    pub fn add_child(&mut self, node: AstNode) {
-        self.children.push(node);
+    pub fn new_leaf(kind: AstKind) -> Self {
+        AstNode::Leaf { kind }
     }
-}
 
-impl AstLeaf {
-    pub fn new(kind: AstKind) -> Self {
-        Self { kind }
+    pub fn add_child(&mut self, node: AstNode) {
+        if let AstNode::Node { children, .. } = self {
+            children.push(node);
+        } else {
+            panic!("Cannot add child to a leaf node!");
+        }
+    }
+
+    pub fn kind(&self) -> &AstKind {
+        match self {
+            AstNode::Node { kind, .. } => kind,
+            AstNode::Leaf { kind } => kind,
+        }
     }
 }
