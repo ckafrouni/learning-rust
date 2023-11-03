@@ -94,7 +94,6 @@ impl Parser {
 
     fn parse_paren_expr(&mut self) -> AstNode {
         let next = self.peek();
-        dbg!(next.clone());
 
         match next {
             Token::LParen => {

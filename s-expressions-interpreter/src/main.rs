@@ -1,41 +1,74 @@
+//! # S-Expressions Interpreter
+//! 
+//! This is a simple interpreter REPL for a custom S-Expressions.
+//! 
+//! ## Usage
+//! 
+//! ```bash
+//! $ cargo install s-expressions-interpreter
+//! $ s-expressions-interpreter
+//! >> (+ 1 2)
+//! 3
+//! >> (let x 1)
+//! 1
+//! >> (let y 2)
+//! 2
+//! >> (+ x y)
+//! 3
+//! >> (def add (x y) (+ x y))
+//! ()
+//! >> (add 1 2)
+//! 3
+//! >> (def fact (n) (if (== n 0) 1 (* n (fact (- n 1)))))
+//! ()
+//! >> (fact 10)
+//! 3628800
+//! >> exit
+//! ```
+//! 
+//! ## Grammar
+//! 
+//! The grammar is defined in the parser module.
+
 pub mod tokenizer;
 pub mod parser;
 
 use tokenizer::Tokenizer;
 use parser::Parser;
 
-fn parsing_an_expression() {
-    // let expr = "1";
-    // let expr = "(+ 1 2)";
-    // let expr = "(+ 1 (- 2 3))";
-    // let expr = "(+ 1 (- 2 ()))";
-    // let expr = "(def (a))";
-    // let expr = "(1)";
-    let expr = "(+ 1 2)";
-    println!("expr: {}", expr);
-    let tokens = Tokenizer::new(expr.to_string()).tokenize();
-    let ast = Parser::new(tokens).parse_expr();
-    println!("Final AST: {:#?}", ast);
-}
+const VERSION: &str = "0.0.1";
+const AUTHOR: &str = "Christophe Kafrouni";
 
-fn parsing_a_program() {
-    let prog = "
-    (+ 1 2)
-    (+ 2 1)
-    ";
-    println!("prog: {}", prog);
-    let tokens = Tokenizer::new(prog.to_string()).tokenize();
-    let ast = Parser::new(tokens).parse_prog();
-    println!("Final AST: {:#?}", ast);
+const PROMPT: &str = ">> ";
+
+const WELCOME_MESSAGE: &str = "\
+Welcome to the S-Expressions Interpreter!
+
+This is a simple interpreter REPL for a custom S-Expressions.";
+
+fn repl() {
+    use std::io::Write;
+    
+    loop {
+        print!("{}", PROMPT);
+        std::io::stdout().flush().unwrap();
+
+        let mut input = String::new();
+        std::io::stdin().read_line(&mut input).unwrap();
+        if input.trim() == "exit" {
+            break;
+        }
+        let tokens = Tokenizer::new(input).tokenize();
+        let mut parser = Parser::new(tokens);
+        let expr = parser.parse_expr();
+        println!("{:?}", expr);
+    }
 }
 
 fn main() {
 
-    println!("parsing an expression");
-    parsing_an_expression();
-    println!("");
+    println!("{}\n\nVERSION: {}\nAUTHOR: {}\n", WELCOME_MESSAGE, VERSION, AUTHOR);
 
-    println!("parsing a program");
-    parsing_a_program();
-    println!("");
+    repl();
+
 }
