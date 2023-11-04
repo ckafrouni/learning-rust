@@ -33,6 +33,7 @@
 pub mod parser;
 pub mod repl;
 pub mod tokenizer;
+pub mod interpreter;
 
 use repl::Repl;
 

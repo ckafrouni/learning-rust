@@ -46,7 +46,8 @@ mod ast;
 
 use crate::tokenizer::Token;
 use crate::tokenizer::{BinaryOp::*, Delimiter::*, UnaryOp::*};
-use ast::{AstKind, AstNode};
+
+pub use ast::{AstKind, AstNode};
 
 #[derive(Debug, PartialEq)]
 pub struct Parser {
@@ -94,6 +95,14 @@ impl Parser {
             Token::Nil => self.parse_nil()?,
             Token::Ident(_) => self.parse_ident()?,
             Token::Delimiter(LParen) => self.parse_paren_expr()?,
+            Token::Delimiter(Space) => {
+                self.next_token();
+                self.parse_expr()?
+            },
+            Token::Delimiter(NewLine) => {
+                self.next_token();
+                self.parse_expr()?
+            },
             tk => Err(format!("unexpected token {:?}", tk))?,
         };
         Ok(node)

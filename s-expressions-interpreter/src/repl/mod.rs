@@ -1,5 +1,6 @@
 use crate::parser::Parser;
 use crate::tokenizer::Tokenizer;
+use crate::interpreter::Interpreter;
 
 use std::io::Write;
 
@@ -8,6 +9,7 @@ pub struct Repl {
     last_result: String,
     history: Vec<String>,
     history_index: usize,
+    interpreter: Interpreter,
 }
 
 #[allow(dead_code)]
@@ -18,6 +20,7 @@ impl Repl {
             last_result: String::new(),
             history: Vec::new(),
             history_index: 0,
+            interpreter: Interpreter::new(),
         }
     }
 
@@ -66,12 +69,15 @@ impl Repl {
 
             match expr {
                 Ok(expr) => {
-                    // let result = expr.eval();
-                    let result = expr.to_string();
-                    self.last_result = result.clone();
+                    match self.interpreter.eval_ast(expr) {
+                        Ok(result) => {
+                            self.last_result = result.to_string().clone();
 
-                    self.display_last_result();
-                    println!("History: {:?}", self.history)
+                            self.display_last_result();
+                            println!("History: {:?}", self.history)
+                        }
+                        Err(err) => println!("Error: {}", err),
+                    }
                 }
                 Err(err) => {
                     println!("Error: {}", err);

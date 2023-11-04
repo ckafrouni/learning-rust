@@ -2,6 +2,16 @@ use crate::tokenizer::ReservedKeyword;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum AstNode {
+    // BinaryOp {
+    //     op: Operator,
+    //     lhs: Box<AstNode>,
+    //     rhs: Box<AstNode>,
+    // },
+    // UnaryOp {
+    //     op: Operator,
+    //     expr: Box<AstNode>,
+    // },
+
     // TODO: Separate out the different types of nodes
     // Example:
     //      - AstNode::FnCall { name: String, args: Vec<AstNode> }
@@ -20,6 +30,16 @@ pub enum AstNode {
     Leaf {
         kind: AstKind,
     },
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum Operator {
+    Add,
+    Sub,
+    Mul,
+    Div,
+    Neg,
+    Not,
 }
 
 #[derive(Debug, Clone, PartialEq)]
