@@ -3,13 +3,13 @@
 //! This module contains the interpreter for the s-expressions language.
 
 mod values;
+mod interpreter;
 
 use values::Value;
 
 use crate::parser;
-use crate::parser::{AstKind, AstNode, Parser};
+use crate::parser::{AstNode, Parser};
 use crate::tokenizer::Tokenizer;
-use crate::tokenizer::{ReservedKeyword};
 
 use std::cell::RefCell;
 
@@ -32,84 +32,20 @@ impl Interpreter {
         let tokens = tokenizer.tokenize();
 
         let mut parser = Parser::new(tokens);
-        let ast = parser.parse_expr()?;
+        let ast = parser.parse_expr();
+
+        // TODO: maybe we should check if the ast contains any errors
+        // (we have AstNode::TokenError and AstNode::ParserError)
+        // We could implement an AstChecker with AstVisitor trait to walk
+        // the ast and print errors if any. Maybe the interpreter shouldn't
+        // be responsible for this. The REPL binary could be, same for the
+        // interpreter binary.
 
         self.eval_ast(ast)
     }
 
     pub fn eval_ast(&self, ast: parser::AstNode) -> Result<Value, String> {
-        let result = match ast {
-            AstNode::Leaf { kind } => match kind {
-                AstKind::Number(n) => Value::Number(n as f64),
-                AstKind::String(s) => Value::String(s),
-                AstKind::Ident(s) => Value::Symbol(s),
-                AstKind::Nil => Value::Nil,
-                AstKind::Reserved(token) => match token {
-                    ReservedKeyword::True => Value::Bool(true),
-                    ReservedKeyword::False => Value::Bool(false),
-                    _ => Err(format!("Invalid reserved keyword: {:?}", token))?,
-                },
-                _ => Err(format!("Invalid leaf node: {:?}", kind))?,
-            },
-            AstNode::Node { kind, children } => match kind {
-                AstKind::Add => {
-                    self.stack
-                        .borrow_mut()
-                        .push(self.eval_ast(children[0].clone())?);
-                    self.stack
-                        .borrow_mut()
-                        .push(self.eval_ast(children[1].clone())?);
-                    self.eval_add()?
-                }
-                AstKind::Sub => {
-                    self.stack
-                        .borrow_mut()
-                        .push(self.eval_ast(children[0].clone())?);
-                    self.stack
-                        .borrow_mut()
-                        .push(self.eval_ast(children[1].clone())?);
-                    self.eval_sub()?
-                }
-                AstKind::Mul => {
-                    self.stack
-                        .borrow_mut()
-                        .push(self.eval_ast(children[0].clone())?);
-                    self.stack
-                        .borrow_mut()
-                        .push(self.eval_ast(children[1].clone())?);
-                    self.eval_mul()?
-                }
-
-                AstKind::Div => {
-                    self.stack
-                        .borrow_mut()
-                        .push(self.eval_ast(children[0].clone())?);
-                    self.stack
-                        .borrow_mut()
-                        .push(self.eval_ast(children[1].clone())?);
-                    self.eval_div()?
-                }
-
-                AstKind::Neg => {
-                    self.stack
-                        .borrow_mut()
-                        .push(self.eval_ast(children[0].clone())?);
-                    self.eval_neg()?
-                }
-                AstKind::Not => {
-                    self.stack
-                        .borrow_mut()
-                        .push(self.eval_ast(children[0].clone())?);
-                    self.eval_not()?
-                }
-
-                AstKind::FnCall => todo!(),
-                AstKind::Reserved(_) => todo!(),
-                AstKind::Prog => todo!(),
-                _ => Err(format!("Invalid node: {:?}", kind))?,
-            },
-        };
-        Ok(result)
+        todo!("eval_ast")
     }
 
     fn eval_add(&self) -> Result<Value, String> {

@@ -1,4 +1,4 @@
-use crate::parser::Parser;
+use crate::parser::{Parser, AstNode};
 use crate::tokenizer::Tokenizer;
 use crate::interpreter::Interpreter;
 
@@ -57,7 +57,11 @@ impl Repl {
         self.history_index = self.history.len();
     }
 
-    pub fn run(&mut self) {
+    fn eval(&mut self, node: AstNode) {
+        println!("eval: {:?}", node);
+    }
+
+    pub fn mainloop(&mut self) {
         loop {
             self.display_prompt();
 
@@ -65,26 +69,10 @@ impl Repl {
             self.add_to_history(input.clone());
 
             let tokens = Tokenizer::new(input).tokenize();
-            let expr = Parser::new(tokens).parse_expr();
+            let node = Parser::new(tokens).parse_expr();
 
-            match expr {
-                Ok(expr) => {
-                    match self.interpreter.eval_ast(expr) {
-                        Ok(result) => {
-                            self.last_result = result.to_string().clone();
-
-                            self.display_last_result();
-                            println!("History: {:?}", self.history)
-                        }
-                        Err(err) => println!("Error: {}", err),
-                    }
-                }
-                Err(err) => {
-                    println!("Error: {}", err);
-                    continue;
-                }
-            }
-
+            self.eval(node);
+            println!("History: {:?}", self.history)
         }
     }
 }

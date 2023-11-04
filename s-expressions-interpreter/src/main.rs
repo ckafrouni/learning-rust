@@ -31,13 +31,24 @@
 //! The grammar is defined in the parser module.
 
 pub mod parser;
-pub mod repl;
 pub mod tokenizer;
+
+pub mod repl;
 pub mod interpreter;
 
 use repl::Repl;
 
+// fn test() {
+//     let mut tok = tokenizer::Tokenizer::new("(+ (- 1 2 2)");
+//     let tokens = tok.tokenize();
+//     dbg!(tokens.clone());
+//     let mut parser = parser::Parser::new(tokens);
+//     let ast = parser.parse_expr();
+//     dbg!(ast.clone());
+// }
+
 fn main() {
+    // test();
     let mut repl = Repl::new(">> ");
-    repl.run();
+    repl.mainloop();
 }
