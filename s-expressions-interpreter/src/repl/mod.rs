@@ -64,13 +64,21 @@ impl Repl {
             let tokens = Tokenizer::new(input).tokenize();
             let expr = Parser::new(tokens).parse_expr();
 
-            // let result = expr.eval();
-            let result = expr.to_string();
-            self.last_result = result.clone();
+            match expr {
+                Ok(expr) => {
+                    // let result = expr.eval();
+                    let result = expr.to_string();
+                    self.last_result = result.clone();
 
-            self.display_last_result();
+                    self.display_last_result();
+                    println!("History: {:?}", self.history)
+                }
+                Err(err) => {
+                    println!("Error: {}", err);
+                    continue;
+                }
+            }
 
-            println!("History: {:?}", self.history)
         }
     }
 }
