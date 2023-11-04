@@ -2,15 +2,19 @@ use crate::tokenizer::ReservedKeyword;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum AstNode {
-    // BinaryOp {
-    //     op: Operator,
-    //     lhs: Box<AstNode>,
-    //     rhs: Box<AstNode>,
-    // },
-    // UnaryOp {
-    //     op: Operator,
-    //     expr: Box<AstNode>,
-    // },
+    Nil,
+    BinaryOp {
+        op: Operator,
+        lhs: Box<AstNode>,
+        rhs: Box<AstNode>,
+    },
+    UnaryOp {
+        op: Operator,
+        expr: Box<AstNode>,
+    },
+    Literal {
+        value: Literal,
+    },
 
     // TODO: Separate out the different types of nodes
     // Example:
@@ -30,6 +34,14 @@ pub enum AstNode {
     Leaf {
         kind: AstKind,
     },
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum Literal {
+    Number(f64),
+    String(String),
+    Bool(bool),
+    Char(char),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -80,13 +92,6 @@ impl AstNode {
             panic!("Cannot add child to a leaf node!");
         }
     }
-
-    // pub fn kind(&self) -> &AstKind {
-    //     match self {
-    //         AstNode::Node { kind, .. } => kind,
-    //         AstNode::Leaf { kind } => kind,
-    //     }
-    // }
 }
 
 /// Implement Display for AstNode
