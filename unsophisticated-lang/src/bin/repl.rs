@@ -1,9 +1,9 @@
-use s_expressions_interpreter::repl::Repl;
+use unsophisticated_lang::repl::Repl;
 
 fn main() {
     let mut repl = Repl::interactive(">> ");
 
     if let Err(e) = repl.mainloop() {
-        println!("Error: {}", e);
+        println!("Hey: {}", e);
     }
 }

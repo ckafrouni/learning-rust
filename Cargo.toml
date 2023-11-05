@@ -3,8 +3,9 @@ resolver = "2"
 members = [
   "datastructures",
   "todo-app",
-  "s-expressions-interpreter",
+  "unsophisticated-lang",
 ]
 
 [workspace.dependencies]
 rand = "0.8.5"
+crossterm = "0.27.0"
