@@ -81,7 +81,10 @@ impl Repl {
     /// use s_expressions_interpreter::repl::Repl;
     ///
     /// let mut repl = Repl::interactive(">> ");
-    /// repl.mainloop();
+
+    /// if let Err(e) = repl.mainloop() {
+    ///     println!("Error: {}", e);
+    /// }
     /// ```
     pub fn mainloop(&mut self) -> Result<(), String> {
         // Loop
