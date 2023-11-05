@@ -49,6 +49,9 @@ use repl::Repl;
 
 fn main() {
     // test();
-    let mut repl = Repl::new(">> ");
-    repl.mainloop();
+    let mut repl = Repl::interactive(">> ");
+
+    if let Err(e) = repl.mainloop() {
+        println!("Error: {}", e);
+    }
 }

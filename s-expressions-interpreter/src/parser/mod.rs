@@ -43,13 +43,11 @@
 
 mod parser;
 mod ast;
-mod ast_visitor;
 
 // #[cfg(test)]
 // mod tests;
 
-pub use ast::AstNode;
-pub use ast_visitor::AstVisitor;
+pub use ast::{AstNode, AstVisitor};
 
 use crate::tokenizer::Token;
 
