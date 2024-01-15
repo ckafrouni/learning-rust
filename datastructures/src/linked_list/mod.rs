@@ -2,7 +2,6 @@ use std::fmt::Debug;
 
 mod iterator;
 
-pub use iterator::LinkedListIter;
 
 pub struct LinkedList<T> {
     head: Option<Box<Node<T>>>,

@@ -7,10 +7,12 @@ pub struct VectorIter<'a, T> {
 
 impl<T> Vector<T> {
     pub fn iter(&self) -> VectorIter<'_, T> {
+        println!("Hello, world!");
         VectorIter {
             vector: self,
             index: 0,
         }
+
     }
 }
 

@@ -2,7 +2,7 @@ use crate::interpreter::{AstInterpreter, Value};
 use crate::parser::Parser;
 use crate::tokenizer::Tokenizer;
 
-use std::io::Write;
+use std::io::{Write, Read};
 
 pub struct Repl {
     interactive: bool,
@@ -10,6 +10,7 @@ pub struct Repl {
     last_result: Value,
     history: History,
     interpreter: AstInterpreter,
+    input_filepath: String,
 }
 
 #[derive(Debug)]
@@ -52,23 +53,44 @@ impl Repl {
         Self {
             interactive: true,
             prompt,
-            ..Self::non_interactive()
+            input_filepath: "".to_string(),
+            ..Self::non_interactive("")
         }
     }
 
-    pub fn non_interactive() -> Self {
+    pub fn non_interactive(filepath: &str) -> Self {
+
         Self {
             interactive: false,
             prompt: "",
             last_result: Value::Nil,
             history: History::new(),
             interpreter: AstInterpreter::new(),
+            input_filepath: filepath.to_string(),
         }
     }
 
     fn read_line(&mut self) -> String {
+        if self.interactive {
+            let mut input = String::new();
+            loop {
+                std::io::stdin().read_line(&mut input).unwrap();
+            }
+        } else {
+            self.read_file()
+        }
+
+        // let mut input = String::new();
+        // std::io::stdin().read_line(&mut input).unwrap();
+        // input
+    }
+
+    fn read_file(&mut self) -> String {
         let mut input = String::new();
-        std::io::stdin().read_line(&mut input).unwrap();
+        std::fs::File::open(&self.input_filepath)
+            .unwrap()
+            .read_to_string(&mut input)
+            .unwrap();
         input
     }
 
@@ -119,6 +141,10 @@ impl Repl {
             println!("{:?}", self.last_result);
             if self.interactive {
                 println!("History: {:?}", self.history)
+            }
+
+            if !self.interactive {
+                break;
             }
         }
 

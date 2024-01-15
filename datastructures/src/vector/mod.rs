@@ -1,7 +1,6 @@
 use std::fmt::{Debug, Display, Formatter, Result};
 
 mod iterator;
-pub use iterator::VectorIter;
 
 pub struct Vector<T> {
     data: Box<[Option<T>]>,
