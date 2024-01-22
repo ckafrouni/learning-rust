@@ -1,5 +1,6 @@
 mod iterator;
 
+#[derive(Debug)]
 pub struct BinarySearchTree<T> {
     root: Option<Box<Node<T>>>,
 }

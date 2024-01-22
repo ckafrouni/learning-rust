@@ -1,0 +1,3 @@
+[workspace]
+members = ["datastructures", "libstr", "unsophisticated-lang", "codecrafters-sqlite-rust"]
+resolver = "2"
